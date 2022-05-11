@@ -9,10 +9,10 @@ object ScalaRecap extends App {
   val aBoolean: Boolean = false
 
   // expressions
-  val anIfExpression = if(2 > 3) "bigger" else "smaller"
+  val anIfExpression: String = if(2 > 3) "bigger" else "smaller"
 
   // instructions vs expressions
-  val theUnit = println("Hello, Scala") // Unit = "no meaningful value" = void in other languages
+  val theUnit: Unit = println("Hello, Scala") // Unit = "no meaningful value" = void in other languages
 
   // functions
   def myFunction(x: Int) = 42
