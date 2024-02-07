@@ -1,7 +1,11 @@
 package playground
 
-import org.apache.spark.sql.functions.{col, expr}
-import org.apache.spark.sql.{Column, DataFrame, SparkSession}
+import org.apache.spark.sql.Column
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.col
+import org.apache.spark.sql.functions.expr
+import org.apache.spark.sql.functions.when
 
 object ColumnsAndExpressionsPlayground extends App {
 
@@ -29,7 +33,7 @@ object ColumnsAndExpressionsPlayground extends App {
 
   // various select methods
   import spark.implicits._
-   val namesAndOriginsDF = carsDF.select("Name","Origin")
+  val namesAndOriginsDF = carsDF.select("Name", "Origin")
   namesAndOriginsDF.printSchema()
   namesAndOriginsDF.show()
 
@@ -39,7 +43,7 @@ object ColumnsAndExpressionsPlayground extends App {
   val carsWithWeightsDf = carsDF.select(
     col("Name"),
     weightInKg.as("Weight_in_Kg"),
-    expr("Weight_in_lbs / 2.2").as("Weight_in_lbs_expr")
+    expr("Weight_in_lbs / 2.2").as("Weight_in_kg_expr")
   )
   carsWithWeightsDf.printSchema()
   carsWithWeightsDf.show()
@@ -50,7 +54,8 @@ object ColumnsAndExpressionsPlayground extends App {
   carsWithSelectExprDF.show()
 
   // DF processing
-  val carsWithKg3DF = carsDF.withColumn("Weight_in_kg", col("Weight_in_lbs") / 2.2)
+  val carsWithKg3DF =
+    carsDF.withColumn("Weight_in_kg", col("Weight_in_lbs") / 2.2)
   carsWithKg3DF.printSchema()
   carsWithKg3DF.show()
 
@@ -72,9 +77,9 @@ object ColumnsAndExpressionsPlayground extends App {
   americanPowerfulCarsDF.show()
 
   // unioning = adding more rows
-   val moreCarsDf = spark.read
-     .option("inferSchema", "true")
-     .json("src/main/resources/data/more_cars.json")
+  val moreCarsDf = spark.read
+    .option("inferSchema", "true")
+    .json("src/main/resources/data/more_cars.json")
 
   moreCarsDf.show()
 
@@ -104,13 +109,21 @@ object ColumnsAndExpressionsPlayground extends App {
 
   println("Second exercise")
   val moviesWithGeneralProfitDf = moviesDf
-    .withColumn("General_profit", col("US_Gross") + col("Worldwide_Gross"))
+    .withColumn(
+      "US_DVD_Sales",
+      when($"US_DVD_Sales".isNull, 0).otherwise($"US_DVD_Sales")
+    )
+    .withColumn(
+      "General_profit",
+      col("US_Gross") + col("Worldwide_Gross") + col("US_DVD_Sales")
+    )
 
   moviesWithGeneralProfitDf.printSchema()
   moviesWithGeneralProfitDf.show()
 
   println("Third exercise")
-  val bestComedies = moviesDf.filter(col("Major_Genre") === "Comedy" and col("IMDB_Rating") > 6)
+  val bestComedies =
+    moviesDf.filter(col("Major_Genre") === "Comedy" and col("IMDB_Rating") > 6)
   bestComedies.printSchema()
   bestComedies.show()
 }

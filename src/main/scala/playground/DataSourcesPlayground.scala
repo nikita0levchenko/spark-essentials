@@ -1,30 +1,36 @@
 package playground
 
-import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
-import org.apache.spark.sql.types.{DateType, DoubleType, LongType, StringType, StructField, StructType}
-import part2dataframes.DataSources.stocksSchema
+import org.apache.spark.sql.types._
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.SaveMode
+import org.apache.spark.sql.SparkSession
 
 object DataSourcesPlayground extends App {
-  val spark = SparkSession.builder()
+  val spark = SparkSession
+    .builder()
     .appName("data-sources-app")
     .master("local[*]")
     .getOrCreate()
 
-  val carsSchema = StructType(Array(
-    StructField("Name", StringType),
-    StructField("Miles_per_Gallon", DoubleType),
-    StructField("Cylinders", LongType),
-    StructField("Displacement", DoubleType),
-    StructField("Horsepower", LongType),
-    StructField("Weight_in_lbs", LongType),
-    StructField("Acceleration", DoubleType),
-    StructField("Year", DateType),
-    StructField("Origin", StringType)
-  ))
+  val carsSchema = StructType(
+    Array(
+      StructField("Name", StringType),
+      StructField("Miles_per_Gallon", DoubleType),
+      StructField("Cylinders", LongType),
+      StructField("Displacement", DoubleType),
+      StructField("Horsepower", LongType),
+      StructField("Weight_in_lbs", LongType),
+      StructField("Acceleration", DoubleType),
+      StructField("Year", DateType),
+      StructField("Origin", StringType)
+    )
+  )
 
-   val carsDF: DataFrame = spark.read
-     .schema(carsSchema)
-     .json("/Users/Nikita_Levchenko/IdeaProjects/Personal/spark-essentials/src/main/resources/data/cars.json")
+  val carsDF: DataFrame = spark.read
+    .schema(carsSchema)
+    .json(
+      "/Users/Nikita_Levchenko/IdeaProjects/Personal/spark-essentials/src/main/resources/data/cars.json"
+    )
 
   //JSON flags
   val carsDFWithJSONFlags = spark.read
@@ -36,17 +42,21 @@ object DataSourcesPlayground extends App {
         "allowSingleQuotes" -> "true"
       )
     )
-    .json("/Users/Nikita_Levchenko/IdeaProjects/Personal/spark-essentials/src/main/resources/data/cars.json")
+    .json(
+      "/Users/Nikita_Levchenko/IdeaProjects/Personal/spark-essentials/src/main/resources/data/cars.json"
+    )
 
   carsDFWithJSONFlags.printSchema()
   carsDFWithJSONFlags.show()
 
   //CSV flags
-  val stocksSchema = StructType(Array(
-    StructField("symbol", StringType),
-    StructField("date", StringType),
-    StructField("price", DoubleType)
-  ))
+  val stocksSchema = StructType(
+    Array(
+      StructField("symbol", StringType),
+      StructField("date", StringType),
+      StructField("price", DoubleType)
+    )
+  )
 
   val stocksDF = spark.read
     .schema(stocksSchema)
@@ -63,7 +73,9 @@ object DataSourcesPlayground extends App {
 
   //Text files
   val textDF = spark.read
-    .text("/Users/Nikita_Levchenko/IdeaProjects/Personal/spark-essentials/src/main/resources/data/sampleTextFile.txt")
+    .text(
+      "/Users/Nikita_Levchenko/IdeaProjects/Personal/spark-essentials/src/main/resources/data/sampleTextFile.txt"
+    )
   textDF.printSchema()
   textDF.show()
 
@@ -87,18 +99,24 @@ object DataSourcesPlayground extends App {
 
   //Exercise:
   val moviesDF = spark.read
-    .json("/Users/Nikita_Levchenko/IdeaProjects/Personal/spark-essentials/src/main/resources/data/movies.json")
+    .json(
+      "/Users/Nikita_Levchenko/IdeaProjects/Personal/spark-essentials/src/main/resources/data/movies.json"
+    )
 
   moviesDF.write
     .option("header", "true")
     .option("delimiter", "\t")
     .mode(SaveMode.Overwrite)
-    .csv("/Users/Nikita_Levchenko/IdeaProjects/Personal/spark-essentials/src/main/resources/data/separated_movies.csv")
+    .csv(
+      "/Users/Nikita_Levchenko/IdeaProjects/Personal/spark-essentials/src/main/resources/data/separated_movies.csv"
+    )
 
   moviesDF.write
     .option("compression", "snappy")
     .mode(SaveMode.Overwrite)
-    .parquet("/Users/Nikita_Levchenko/IdeaProjects/Personal/spark-essentials/src/main/resources/data/snappy_parquet_movies")
+    .parquet(
+      "/Users/Nikita_Levchenko/IdeaProjects/Personal/spark-essentials/src/main/resources/data/snappy_parquet_movies"
+    )
 
   moviesDF.write
     .format("jdbc")

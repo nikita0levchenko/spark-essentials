@@ -1,7 +1,8 @@
 package playground
 
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.SparkSession
 
 object ComplexTypes extends App {
 

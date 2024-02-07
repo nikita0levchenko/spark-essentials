@@ -1,18 +1,17 @@
 package playground
 
-import org.apache.spark.sql.functions.{
-  approx_count_distinct,
-  avg,
-  col,
-  count,
-  countDistinct,
-  max,
-  mean,
-  min,
-  stddev,
-  sum
-}
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.functions.approx_count_distinct
+import org.apache.spark.sql.functions.avg
+import org.apache.spark.sql.functions.col
+import org.apache.spark.sql.functions.count
+import org.apache.spark.sql.functions.countDistinct
+import org.apache.spark.sql.functions.max
+import org.apache.spark.sql.functions.mean
+import org.apache.spark.sql.functions.min
+import org.apache.spark.sql.functions.stddev
+import org.apache.spark.sql.functions.sum
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.SparkSession
 
 object AggregationsPlayground extends App {
   val spark = SparkSession

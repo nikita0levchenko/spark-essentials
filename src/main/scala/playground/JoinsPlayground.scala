@@ -1,7 +1,11 @@
 package playground
 
-import org.apache.spark.sql.functions.{col, expr, max}
-import org.apache.spark.sql.{Column, DataFrame, SparkSession}
+import org.apache.spark.sql.functions.col
+import org.apache.spark.sql.functions.expr
+import org.apache.spark.sql.functions.max
+import org.apache.spark.sql.Column
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.SparkSession
 
 object JoinsPlayground extends App {
   val spark: SparkSession = SparkSession
@@ -39,6 +43,9 @@ object JoinsPlayground extends App {
     .drop("band")
     .withColumnRenamed("id", "band_id")
 
+  bandsWithMembersInfoIJDf.printSchema()
+  bandsWithMembersInfoIJDf.show()
+
   // outer joins
   // left outer = everything in the inner join + all the rows in the LEFT table, with null where the data is missing
   val bandsWithMembersInfoLeftOuterDF: DataFrame = bandsDf
@@ -50,6 +57,9 @@ object JoinsPlayground extends App {
     .drop("band")
     .withColumnRenamed("id", "band_id")
 
+  bandsWithMembersInfoLeftOuterDF.printSchema()
+  bandsWithMembersInfoLeftOuterDF.show()
+
   // right outer join = everything in the inner join + all the rows in the RIGHT table, with null where the data is missing
   val bandsWithMembersInfoRightOuterDF: DataFrame = bandsDf
     .join(
@@ -60,6 +70,9 @@ object JoinsPlayground extends App {
     .drop("band")
     .withColumnRenamed("id", "band_id")
 
+  bandsWithMembersInfoRightOuterDF.printSchema()
+  bandsWithMembersInfoRightOuterDF.show()
+
   // outer join = everything in the inner join + all the rows in the BOTH table, with null where the data is missing
   val bandsWithMembersInfoOuterDF: DataFrame = bandsDf
     .join(
@@ -69,6 +82,9 @@ object JoinsPlayground extends App {
     )
     .drop("band")
     .withColumnRenamed("id", "band_id")
+
+  bandsWithMembersInfoOuterDF.printSchema()
+  bandsWithMembersInfoOuterDF.show()
 
   // semi-join
   // semi_left join = data only from LEFT table, which satisfying join condition
@@ -81,6 +97,9 @@ object JoinsPlayground extends App {
     .drop("band")
     .withColumnRenamed("id", "band_id")
 
+  bandsWithGuitarPlayersInfoLeftSemiDF.printSchema()
+  bandsWithGuitarPlayersInfoLeftSemiDF.show()
+
   // anti-join = all rows from LEFT table which NOT satisfying join condition
   val bandsWithGuitarPlayersInfoRightSemiDF: DataFrame = bandsDf
     .join(
@@ -90,6 +109,9 @@ object JoinsPlayground extends App {
     )
     .drop("band")
     .withColumnRenamed("id", "band_id")
+
+  bandsWithGuitarPlayersInfoRightSemiDF.printSchema()
+  bandsWithGuitarPlayersInfoRightSemiDF.show()
 
   // things to bear in mind
   /* val res = bandsDf.join(guitarPlayersDF, bandsDf.col("id") === guitarPlayersDF.col("band"))

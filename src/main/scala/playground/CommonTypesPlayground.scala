@@ -1,7 +1,10 @@
 package playground
 
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.{Column, DataFrame, Row, SparkSession}
+import org.apache.spark.sql.Column
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.SparkSession
 
 object CommonTypesPlayground extends App {
 
@@ -26,6 +29,8 @@ object CommonTypesPlayground extends App {
 
   val moviesWithFlagsDF: DataFrame =
     moviesDF.select(col("Title"), goodDramaFilter.as("good_movie"))
+
+  moviesWithFlagsDF.show()
 
   // filtering on the boolean column name
   moviesWithFlagsDF.filter(col("good_movie")).show()
@@ -68,6 +73,8 @@ object CommonTypesPlayground extends App {
     .where(col("regex_extract") =!= "")
     .drop("regex_extract")
 
+  vwfDF.show()
+
   // replace with regex
   vwfDF
     .select(
@@ -79,7 +86,7 @@ object CommonTypesPlayground extends App {
       ).as("replaced_regex")
     )
     .where(col("replaced_regex") =!= "")
-    .drop("replaced_regex")
+    //.drop("replaced_regex")
     .show()
 
   /** Exercise:
@@ -89,10 +96,10 @@ object CommonTypesPlayground extends App {
     *   - regex
     */
 
-  def getCarNames(cars: DataFrame): List[String] = for {
-    car: Row <- cars.select("Name").rdd.collect().toList
-    processedCar: String = car.toString()
-  } yield processedCar.substring(1, processedCar.length - 1)
+//  def getCarNames(cars: DataFrame): List[String] = for {
+//    car: Row <- cars.select("Name").rdd.collect().toList
+//    processedCar: String = car.toString()
+//  } yield processedCar.substring(1, processedCar.length - 1)
 
   // regex version
   def getCarNames: List[String] = List("Volkswagen", "Ford", "Audi")
